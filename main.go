@@ -15,10 +15,10 @@ const (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	var playerHand int
+	var playerHand string
 	fmt.Print("Input: ")
-	_, err := fmt.Scanf("%d", &playerHand)
-	if err != nil || playerHand < 0 || playerHand > 2 {
+	_, err := fmt.Scanf("%s", &playerHand)
+	if err != nil || (playerHand != "r" && playerHand != "s" && playerHand != "p") {
 		fmt.Println("Error")
 		return
 	}
@@ -39,43 +39,42 @@ func main() {
 	}
 }
 
-func biasJanken() int {
+func biasJanken() string {
 	randNum := rand.Intn(100)
 	if randNum < pRock {
-		return 0
+		return "r"
 	} else if randNum < (pRock + pScissors) {
-		return 1
+		return "s"
 	} else if randNum < (pRock + pScissors + pPaper) {
-		return 2
+		return "p"
 	} else {
-		return 3
+		return "i"
 	}
 }
 
-func getHandName(hand int) string {
+func getHandName(hand string) string {
 	switch hand {
-	case 0:
+	case "r":
 		return "Rock"
-	case 1:
+	case "s":
 		return "Scissors"
-	case 2:
+	case "p":
 		return "Paper"
-	case 3:
+	case "i":
 		return "Invincible"
 	default:
 		return "Unknown hand"
 	}
 }
 
-func judge(playerHand, yodogawaHand int) int {
+func judge(playerHand, yodogawaHand string) int {
 	if playerHand == yodogawaHand {
 		return 0
 	}
-	if (playerHand == 0 && yodogawaHand == 1) ||
-		(playerHand == 1 && yodogawaHand == 2) ||
-		(playerHand == 2 && yodogawaHand == 0) {
+	if (playerHand == "r" && yodogawaHand == "s") ||
+		(playerHand == "s" && yodogawaHand == "p") ||
+		(playerHand == "p" && yodogawaHand == "r") {
 		return 1
 	}
 	return -1
 }
-

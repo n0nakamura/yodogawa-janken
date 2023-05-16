@@ -11,13 +11,13 @@ func TestBiasJanken(t *testing.T) {
 	for j := 0; j < c; j++ {
 		hand := biasJanken()
 		switch hand {
-		case 0:
+		case "r":
 			r++
-		case 1:
+		case "s":
 			s++
-		case 2:
+		case "p":
 			p++
-		case 3:
+		case "i":
 			i++
 		default:
 			t.Error("Unknown hand")
