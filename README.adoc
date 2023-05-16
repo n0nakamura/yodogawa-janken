@@ -1,3 +1,10 @@
 = Yodogawa-Janken
 
 A bot that can play rock-paper-scissors with Yodogawa-san.
+
+If you mention ``r`` for rock, ``s`` for scissors, or ``p`` for paper to yodogawa-janken, it will reply with the hand of yodogawa-janken and the result of the match. The occurrence probabilities of yodogawa-janken's hands are as follows:
+
+* *Rock*: 26 %
+* *Scissors*: 32 %
+* *Paper*: 37 %
+* *Invincible*: 5 %
