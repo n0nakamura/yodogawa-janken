@@ -1,4 +1,4 @@
-package yodogawajanken
+package main
 
 import (
 	"fmt"
