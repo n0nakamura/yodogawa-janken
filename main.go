@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -53,18 +54,19 @@ func biasJanken() string {
 }
 
 func getHandName(hand string) string {
-	switch hand {
-	case "r":
-		return "Rock"
-	case "s":
-		return "Scissors"
-	case "p":
-		return "Paper"
-	case "i":
-		return "Invincible"
-	default:
-		return "Unknown hand"
+	handNames := map[string]string{
+		"r": "Rock",
+		"s": "Scissors",
+		"p": "Paper",
+		"i": "Invincible",
 	}
+
+	name, ok := handNames[hand]
+	if !ok {
+		log.Fatal("Unknown hand")
+	}
+
+	return name
 }
 
 func judge(playerHand, yodogawaHand string) int {
