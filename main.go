@@ -7,12 +7,6 @@ import (
 	"time"
 )
 
-const (
-	pRock     = 26
-	pScissors = 32
-	pPaper    = 37
-)
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -41,16 +35,27 @@ func main() {
 }
 
 func biasJanken() string {
-	randNum := rand.Intn(100)
-	if randNum < pRock {
-		return "r"
-	} else if randNum < (pRock + pScissors) {
-		return "s"
-	} else if randNum < (pRock + pScissors + pPaper) {
-		return "p"
-	} else {
-		return "i"
+	var handProbabilities = map[string]int{
+		"r": 26,
+		"s": 32,
+		"p": 37,
+		"i": 5,
 	}
+
+	var allProb = 0
+	for _, probability := range handProbabilities {
+		allProb += probability
+	}
+	randNum := rand.Intn(allProb)
+
+	var cumulativeProb = 0
+	for hand, probability := range handProbabilities {
+		cumulativeProb += probability
+		if randNum < cumulativeProb {
+			return hand
+		}
+	}
+	return ""
 }
 
 func getHandName(hand string) string {
