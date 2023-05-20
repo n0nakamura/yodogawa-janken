@@ -7,6 +7,27 @@ import (
 	"time"
 )
 
+type Outcome uint
+
+const (
+	WIN Outcome = iota
+	LOSE
+	DRAW
+)
+
+var outcomeNameMap = map[Outcome]string{
+	WIN:  "YOU WIN",
+	LOSE: "YOU LOSE",
+	DRAW: "DRAW",
+}
+
+func (o Outcome) String() string {
+	if s, ok := outcomeNameMap[o]; ok {
+		return s
+	}
+	return "Unknown status"
+}
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -25,12 +46,12 @@ func main() {
 
 	result := judge(playerHand, yodogawaHand)
 	switch result {
-	case 0:
-		fmt.Println("DRAW")
-	case 1:
-		fmt.Println("YOU WIN")
-	case -1:
-		fmt.Println("YOU LOSE")
+	case DRAW:
+		fmt.Println(DRAW)
+	case WIN:
+		fmt.Println(WIN)
+	case LOSE:
+		fmt.Println(LOSE)
 	}
 }
 
@@ -74,14 +95,14 @@ func getHandName(hand string) string {
 	return name
 }
 
-func judge(playerHand, yodogawaHand string) int {
+func judge(playerHand, yodogawaHand string) Outcome {
 	if playerHand == yodogawaHand {
-		return 0
+		return DRAW
 	}
 	if (playerHand == "r" && yodogawaHand == "s") ||
 		(playerHand == "s" && yodogawaHand == "p") ||
 		(playerHand == "p" && yodogawaHand == "r") {
-		return 1
+		return WIN
 	}
-	return -1
+	return LOSE
 }
