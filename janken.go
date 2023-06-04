@@ -37,10 +37,10 @@ const (
 )
 
 var handNames = map[Hand]string{
-	ROCK:       "Rock",
-	SCISSORS:   "Scissors",
-	PAPER:      "Paper",
-	INVINCIBLE: "Invincible",
+	ROCK:       "✊ Rock",
+	SCISSORS:   "✌ Scissors",
+	PAPER:      "🖐 Paper",
+	INVINCIBLE: "👉 Invincible",
 }
 
 func (h Hand) String() string {
@@ -52,11 +52,11 @@ func (h Hand) String() string {
 
 func getPlayerHand(playerHand string) Hand {
 	switch playerHand {
-	case "r":
+	case "R", "✊":
 		return ROCK
-	case "s":
+	case "S", "✌":
 		return SCISSORS
-	case "p":
+	case "P", "🖐":
 		return PAPER
 	default:
 		log.Fatalf("Invalid hand")
