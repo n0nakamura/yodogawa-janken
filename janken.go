@@ -12,12 +12,16 @@ const (
 	WIN Outcome = iota
 	LOSE
 	DRAW
+	LOVE
+	HANDSHAKE
 )
 
 var outcomeNameMap = map[Outcome]string{
-	WIN:  "YOU WIN",
-	LOSE: "YOU LOSE",
-	DRAW: "DRAW",
+	WIN:       "YOU WIN",
+	LOSE:      "YOU LOSE",
+	DRAW:      "DRAW",
+	LOVE:      "BIG LOVE...🤟",
+	HANDSHAKE: "SHAKING... 🤝",
 }
 
 func (o Outcome) String() string {
@@ -34,6 +38,9 @@ const (
 	SCISSORS
 	PAPER
 	INVINCIBLE
+	HLOVE
+	HHANDSHAKE
+	OTHER
 )
 
 var handNames = map[Hand]string{
@@ -41,6 +48,9 @@ var handNames = map[Hand]string{
 	SCISSORS:   "✌ Scissors",
 	PAPER:      "🖐 Paper",
 	INVINCIBLE: "👉 Invincible",
+	HLOVE:      "🤟",
+	HHANDSHAKE: "🤝",
+	OTHER:      "🤔",
 }
 
 func (h Hand) String() string {
@@ -52,12 +62,18 @@ func (h Hand) String() string {
 
 func getPlayerHand(playerHand string) Hand {
 	switch playerHand {
-	case "R", "✊":
+	case "R", "✊", "👊", "🤛", "🤜", "💪":
 		return ROCK
-	case "S", "✌":
+	case "S", "✌", "🤞":
 		return SCISSORS
-	case "P", "🖐":
+	case "P", "🖐", "✋", "🤚", "🖖", "🫲", "🫱", "🫳", "🫴", "👋", "👐", "🤲", "🤗":
 		return PAPER
+	case "🤟":
+		return HLOVE
+	case "🤝":
+		return HHANDSHAKE
+	case "👌", "🤌", "🤏", "🤘", "🤙", "👈", "👉", "👆", "👇", "☝", "👍", "👏", "🙏":
+		return OTHER
 	default:
 		log.Fatalf("Invalid hand")
 		panic("panic")
@@ -97,11 +113,15 @@ func biasJanken() Hand {
 func doJanken(playerHand Hand, yodogawaHand Hand) Outcome {
 	if playerHand == yodogawaHand {
 		return DRAW
-	}
-	if (playerHand == ROCK && yodogawaHand == SCISSORS) ||
+	} else if (playerHand == ROCK && yodogawaHand == SCISSORS) ||
 		(playerHand == SCISSORS && yodogawaHand == PAPER) ||
 		(playerHand == PAPER && yodogawaHand == ROCK) {
 		return WIN
+	} else if playerHand == HLOVE {
+		return LOVE
+	} else if playerHand == HHANDSHAKE {
+		return HANDSHAKE
 	}
+
 	return LOSE
 }

@@ -91,7 +91,7 @@ func do(sk string, pub string) error {
 	// TODO: このfor文内部の処理をmain関数に移しゴルーチンとチャンネルでいい感じにする
 	for pev := range sub.Events {
 		var inputHand string
-		if re, err := regexp.Compile(`[RSP✊✌🖐]`); err != nil {
+		if re, err := regexp.Compile(`[RSP✊👊🤛🤜💪✌🤞🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🤟🤝👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏]`); err != nil {
 			return err
 		} else {
 			inputHand = re.FindString(pev.Content)
@@ -101,12 +101,18 @@ func do(sk string, pub string) error {
 			continue
 		}
 
+		var content string
 		playerHand := getPlayerHand(inputHand)
 		yodogawaHand := biasJanken()
 		result := doJanken(playerHand, yodogawaHand)
-		content := "Your hand: " + handNames[playerHand] + "\n" +
-			"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
-			outcomeNameMap[result]
+		if result == WIN || result == LOSE || result == DRAW {
+			content = "Your hand: " + handNames[playerHand] + "\n" +
+				"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
+				outcomeNameMap[result]
+		} else {
+			content = "Your hand: " + handNames[playerHand] + "\n" +
+				outcomeNameMap[result]
+		}
 
 		if err = postReply(sk, pub, pev, content); err != nil {
 			return err
