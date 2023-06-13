@@ -88,7 +88,7 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	}
 
 	// TODO: このfor文内部の処理をmain関数に移しゴルーチンとチャンネルでいい感じにする
-	go func(){
+	go func() {
 		for pev := range sub.Events {
 			pevc <- pev
 		}
@@ -102,7 +102,7 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 
 	// Extract player hand
 	var inputHand string
-	if re, err := regexp.Compile(`[RSP✊✌🖐]`); err != nil {
+	if re, err := regexp.Compile(`[RSP✊👊🤛🤜💪✌🤞🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🤟🤝👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏]`); err != nil {
 		return err
 	} else {
 		inputHand = re.FindString(pev.Content)
@@ -112,12 +112,18 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	}
 
 	// Generate a content
+	var content string
 	playerHand := getPlayerHand(inputHand)
 	yodogawaHand := biasJanken()
 	result := doJanken(playerHand, yodogawaHand)
-	content := "Your hand: " + handNames[playerHand] + "\n" +
-		"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
-		outcomeNameMap[result]
+	if result == WIN || result == LOSE || result == DRAW {
+		content = "Your hand: " + handNames[playerHand] + "\n" +
+			"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
+			outcomeNameMap[result]
+	} else {
+		content = "Your hand: " + handNames[playerHand] + "\n" +
+			outcomeNameMap[result]
+	}
 
 	// Create a event
 	ev := nostr.Event{}
