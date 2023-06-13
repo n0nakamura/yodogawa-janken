@@ -17,13 +17,13 @@ type Config struct {
 }
 
 var defaultRelays = []string{
-	// "ws://172.17.0.1:7447",
+	"ws://172.17.0.1:7447",
 
-	"wss://relay-jp.nostr.wirednet.jp",
-	"wss://relay.nostr.wirednet.jp",
-	"wss://nostr-relay.nokotaro.com",
-	"wss://nostr.holybea.com",
-	"wss://nostr.h3z.jp",
+	// "wss://relay-jp.nostr.wirednet.jp",
+	// "wss://relay.nostr.wirednet.jp",
+	// "wss://nostr-relay.nokotaro.com",
+	// "wss://nostr.holybea.com",
+	// "wss://nostr.h3z.jp",
 
 	// "wss://nos.lol",
 	// "wss://nostr.mom",
@@ -61,8 +61,7 @@ func calcHex(nsec string) (string, string, error) {
 	return sk, pub, nil
 }
 
-// 関数doから関数subscribeへ処理を切り分ける
-func do(sk string, pub string) error {
+func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	ctx := context.Background()
 
 	relay, err := nostr.RelayConnect(ctx, defaultRelays[0])
@@ -89,37 +88,39 @@ func do(sk string, pub string) error {
 	}
 
 	// TODO: このfor文内部の処理をmain関数に移しゴルーチンとチャンネルでいい感じにする
-	for pev := range sub.Events {
-		var inputHand string
-		if re, err := regexp.Compile(`[RSP✊✌🖐]`); err != nil {
-			return err
-		} else {
-			inputHand = re.FindString(pev.Content)
+	go func(){
+		for pev := range sub.Events {
+			pevc <- pev
 		}
-
-		if inputHand == "" {
-			continue
-		}
-
-		playerHand := getPlayerHand(inputHand)
-		yodogawaHand := biasJanken()
-		result := doJanken(playerHand, yodogawaHand)
-		content := "Your hand: " + handNames[playerHand] + "\n" +
-			"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
-			outcomeNameMap[result]
-
-		if err = postReply(sk, pub, pev, content); err != nil {
-			return err
-		}
-	}
+	}()
 
 	return nil
 }
 
-func postReply(sk string, pub string, pev *nostr.Event, content string) error {
-	ev := nostr.Event{}
+func postReply(sk string, pub string, pevc chan *nostr.Event) error {
+	pev := <-pevc
+
+	// Extract player hand
+	var inputHand string
+	if re, err := regexp.Compile(`[RSP✊✌🖐]`); err != nil {
+		return err
+	} else {
+		inputHand = re.FindString(pev.Content)
+	}
+	if inputHand == "" {
+		return nil // continue的処理
+	}
+
+	// Generate a content
+	playerHand := getPlayerHand(inputHand)
+	yodogawaHand := biasJanken()
+	result := doJanken(playerHand, yodogawaHand)
+	content := "Your hand: " + handNames[playerHand] + "\n" +
+		"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
+		outcomeNameMap[result]
 
 	// Create a event
+	ev := nostr.Event{}
 	ev.PubKey = pub
 	ev.CreatedAt = nostr.Now()
 	ev.Kind = nostr.KindTextNote // kind1
@@ -167,8 +168,12 @@ func main() {
 		return
 	}
 
-	err = do(sk, pub)
+	pevc := make(chan *nostr.Event)
+	go postReply(sk, pub, pevc)
+
+	err = subscribeEvent(sk, pub, pevc)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 }
