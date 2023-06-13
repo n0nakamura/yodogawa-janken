@@ -21,3 +21,15 @@ If you mention ``R`` or ``✊`` for rock, ``S`` or ``✌`` for scissors, or ``P`
 |👉 Invincible
 |5
 |===
+
+== Used and referenced resources
+
+The following resources were used or referenced during the creation of this program.
+
+Yodogawa-Janken is created using go-nostr (link:https://github.com/nbd-wtf/go-nostr[nbd-wtf/go-nostr： Nostr library for Golang]) library. go-nostr is provided under the MIT license.
+
+The implementation of the relay functionality was inspired by Mr. matsuu's namazu (link:https://github.com/matsuu/namazu[matsuu/namazu： 緊急地震速報（予報）を受け取ってSNSに投げるプログラム一式]), which is provided under the MIT license.
+
+Most of the processing in the ``postReply`` function in ``main.go`` mimics Mr. mattn's makeitquote (link:https://github.com/mattn/nostr-makeitquote[mattn/nostr-makeitquote]). makeitquote is available under the MIT license.
+
+I would like to express my gratitude here as Yodogawa-Janken could not have been created without these programs.
