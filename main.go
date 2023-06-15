@@ -4,12 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
 
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip19"
+)
+
+const (
+	name    = "yodogawa-janken"
+	version = "0.0.3"
 )
 
 type Config struct {
@@ -155,6 +161,8 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 }
 
 func main() {
+	fmt.Println(name, version)
+
 	var cfg Config
 	if file, err := os.ReadFile("config.json"); err == nil {
 		if err := json.Unmarshal(file, &cfg); err != nil {
