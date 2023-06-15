@@ -29,3 +29,17 @@ func TestBiasJanken(t *testing.T) {
 		t.Error("Inappropriate rate of occurrence")
 	}
 }
+
+func TestGetPlayerHand(t *testing.T) {
+	for hand, patterns := range handPatterns {
+		for _, h := range patterns {
+			if result, err := getPlayerHand(string(h)); (hand != result) || (err != nil) {
+				t.Error("Invalid return value of the function getPlayerHand within the expected pattern range.")
+			}
+		}
+	}
+
+	if _, err := getPlayerHand("あ"); err == nil {
+		t.Error("No errors have occurred for unexpected patterns.")
+	}
+}
