@@ -70,6 +70,7 @@ func calcHex(nsec string) (string, string, error) {
 func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	ctx := context.Background()
 
+	// TODO: 複数のリレーから取得できるようにする。
 	relay, err := nostr.RelayConnect(ctx, defaultRelays[0])
 	if err != nil {
 		log.Fatal(err)
