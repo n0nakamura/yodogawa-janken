@@ -117,7 +117,10 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 
 	// Generate a content
 	var content string
-	playerHand := getPlayerHand(inputHand)
+	playerHand, err := getPlayerHand(inputHand)
+	if err != nil {
+		return err
+	}
 	yodogawaHand := biasJanken()
 	result := doJanken(playerHand, yodogawaHand)
 	if result == WIN || result == LOSE || result == DRAW {

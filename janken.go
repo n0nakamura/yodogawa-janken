@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"math/rand"
 	"regexp"
@@ -71,29 +71,15 @@ func (h Hand) String() string {
 	return "Unknown hand"
 }
 
-func getPlayerHand(playerHand string) Hand {
+func getPlayerHand(playerHand string) (Hand, error) {
 	var re = make(map[Hand]*regexp.Regexp)
 	for hand, pattern := range handPatterns {
 		re[hand] = regexp.MustCompile(`[` + pattern + `]`)
+		if ok := re[hand].MatchString(playerHand); ok {
+			return hand, nil
+		}
 	}
-
-	switch {
-	case re[ROCK].MatchString(playerHand):
-		return ROCK
-	case re[SCISSORS].MatchString(playerHand):
-		return SCISSORS
-	case re[PAPER].MatchString(playerHand):
-		return PAPER
-	case re[HLOVE].MatchString(playerHand):
-		return HLOVE
-	case re[HHANDSHAKE].MatchString(playerHand):
-		return HHANDSHAKE
-	case re[OTHER].MatchString(playerHand):
-		return OTHER
-	default:
-		log.Fatalf("Invalid hand")
-		panic("panic")
-	}
+	return 0, errors.New("invalid hand")
 }
 
 func biasJanken() Hand {
