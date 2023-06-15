@@ -23,13 +23,13 @@ type Config struct {
 }
 
 var defaultRelays = []string{
-	"ws://172.17.0.1:7447",
+	// "ws://172.17.0.1:7447",
 
-	// "wss://relay-jp.nostr.wirednet.jp",
-	// "wss://relay.nostr.wirednet.jp",
-	// "wss://nostr-relay.nokotaro.com",
-	// "wss://nostr.holybea.com",
-	// "wss://nostr.h3z.jp",
+	"wss://relay-jp.nostr.wirednet.jp",
+	"wss://relay.nostr.wirednet.jp",
+	"wss://nostr-relay.nokotaro.com",
+	"wss://nostr.holybea.com",
+	"wss://nostr.h3z.jp",
 
 	// "wss://nos.lol",
 	// "wss://nostr.mom",

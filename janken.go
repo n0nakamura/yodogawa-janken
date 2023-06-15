@@ -60,10 +60,10 @@ var handNames = map[Hand]string{
 }
 
 var handPatterns = map[Hand]string{
-	ROCK:       `R✊👊🤛🤜💪`,
-	SCISSORS:   `S✌🤞`,
-	PAPER:      `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗`,
-	HLOVE:      `🤟`,
+	ROCK:       `R✊👊🤛🤜💪🪨`,
+	SCISSORS:   `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`,
+	PAPER:      `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`,
+	HLOVE:      `🤟🫶🫂`,
 	HHANDSHAKE: `🤝`,
 	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`,
 }
