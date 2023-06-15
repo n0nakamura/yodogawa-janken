@@ -87,12 +87,9 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 		log.Fatal(err)
 	}
 
-	// TODO: このfor文内部の処理をmain関数に移しゴルーチンとチャンネルでいい感じにする
-	go func() {
-		for pev := range sub.Events {
-			pevc <- pev
-		}
-	}()
+	for pev := range sub.Events {
+		pevc <- pev
+	}
 
 	return nil
 }
@@ -153,6 +150,7 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	if success == 0 {
 		return errors.New("failed to publish")
 	}
+
 	return nil
 }
 
@@ -175,7 +173,13 @@ func main() {
 	}
 
 	pevc := make(chan *nostr.Event)
-	go postReply(sk, pub, pevc)
+	go func() {
+		for {
+			if err != postReply(sk, pub, pevc) {
+				continue
+			}
+		}
+	}()
 
 	err = subscribeEvent(sk, pub, pevc)
 	if err != nil {
