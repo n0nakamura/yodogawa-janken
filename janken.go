@@ -47,8 +47,6 @@ const (
 	HLOVE
 	HHANDSHAKE
 	OTHER
-	HINFO
-	HBATTLE
 )
 
 var handNames = map[Hand]string{
@@ -59,8 +57,6 @@ var handNames = map[Hand]string{
 	HLOVE:      "🤟",
 	HHANDSHAKE: "🤝",
 	OTHER:      "🤔",
-	HINFO:      "ℹ️ Info",
-	HBATTLE:    "⚔️ Battle",
 }
 
 var handPatterns = map[Hand]string{
@@ -70,8 +66,6 @@ var handPatterns = map[Hand]string{
 	HLOVE:      `🤟`,
 	HHANDSHAKE: `🤝`,
 	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`,
-	HINFO:      `Iℹ️`,
-	HBATTLE:    "B⚔️",
 }
 
 func (h Hand) String() string {
@@ -79,6 +73,23 @@ func (h Hand) String() string {
 		return s
 	}
 	return "Unknown hand"
+}
+
+type Mode uint
+
+const (
+	M_INFO Mode = iota
+	M_BATTLE
+)
+
+var modeNames = map[Mode]string{
+	M_INFO:   "ℹ️ Info",
+	M_BATTLE: "⚔️ Battle",
+}
+
+var modePatterns = map[Mode]string{
+	M_INFO:   `Iℹ️`,
+	M_BATTLE: "B⚔️",
 }
 
 func getPlayerHand(playerHand string) (Hand, error) {
@@ -134,10 +145,6 @@ func doJanken(playerHand Hand, yodogawaHand Hand) Outcome {
 		return LOVE
 	case playerHand == HHANDSHAKE:
 		return HANDSHAKE
-	case playerHand == HINFO:
-		return INFO
-	case playerHand == HBATTLE:
-		return BATTLE
 	default:
 		return LOSE
 	}
