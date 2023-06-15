@@ -129,11 +129,14 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	}
 	yodogawaHand := biasJanken()
 	result := doJanken(playerHand, yodogawaHand)
-	if result == WIN || result == LOSE || result == DRAW {
+	switch result {
+	case WIN, LOSE, DRAW:
 		content = "Your hand: " + handNames[playerHand] + "\n" +
 			"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
 			outcomeNameMap[result]
-	} else {
+	case BATTLE:
+		fallthrough
+	default:
 		content = "Your hand: " + handNames[playerHand] + "\n" +
 			outcomeNameMap[result]
 	}

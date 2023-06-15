@@ -17,6 +17,7 @@ const (
 	LOVE
 	HANDSHAKE
 	INFO
+	BATTLE
 )
 
 var outcomeNameMap = map[Outcome]string{
@@ -26,6 +27,7 @@ var outcomeNameMap = map[Outcome]string{
 	LOVE:      "BIG LOVE...🤟",
 	HANDSHAKE: "SHAKING... 🤝",
 	INFO:      name + "\nversion " + version,
+	BATTLE:    "Not ready yet...",
 }
 
 func (o Outcome) String() string {
@@ -46,6 +48,7 @@ const (
 	HHANDSHAKE
 	OTHER
 	HINFO
+	HBATTLE
 )
 
 var handNames = map[Hand]string{
@@ -57,6 +60,7 @@ var handNames = map[Hand]string{
 	HHANDSHAKE: "🤝",
 	OTHER:      "🤔",
 	HINFO:      "ℹ️ Info",
+	HBATTLE:    "⚔️ Battle",
 }
 
 var handPatterns = map[Hand]string{
@@ -67,6 +71,7 @@ var handPatterns = map[Hand]string{
 	HHANDSHAKE: `🤝`,
 	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`,
 	HINFO:      `Iℹ️`,
+	HBATTLE:    "B⚔️",
 }
 
 func (h Hand) String() string {
@@ -131,6 +136,8 @@ func doJanken(playerHand Hand, yodogawaHand Hand) Outcome {
 		return HANDSHAKE
 	case playerHand == HINFO:
 		return INFO
+	case playerHand == HBATTLE:
+		return BATTLE
 	default:
 		return LOSE
 	}
