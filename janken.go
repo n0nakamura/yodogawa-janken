@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
+	"regexp"
 	"time"
 )
 
@@ -53,6 +55,15 @@ var handNames = map[Hand]string{
 	OTHER:      "🤔",
 }
 
+var handPatterns = map[Hand]string{
+	ROCK:       `R✊👊🤛🤜💪`,
+	SCISSORS:   `S✌🤞`,
+	PAPER:      `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗`,
+	HLOVE:      `🤟`,
+	HHANDSHAKE: `🤝`,
+	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏`,
+}
+
 func (h Hand) String() string {
 	if s, ok := handNames[h]; ok {
 		return s
@@ -61,18 +72,23 @@ func (h Hand) String() string {
 }
 
 func getPlayerHand(playerHand string) Hand {
-	switch playerHand {
-	case "R", "✊", "👊", "🤛", "🤜", "💪":
+	var re = make(map[Hand]*regexp.Regexp)
+	for hand, pattern := range handPatterns {
+		re[hand] = regexp.MustCompile(`[` + pattern + `]`)
+	}
+
+	switch {
+	case re[ROCK].MatchString(playerHand):
 		return ROCK
-	case "S", "✌", "🤞":
+	case re[SCISSORS].MatchString(playerHand):
 		return SCISSORS
-	case "P", "🖐", "✋", "🤚", "🖖", "🫲", "🫱", "🫳", "🫴", "👋", "👐", "🤲", "🤗":
+	case re[PAPER].MatchString(playerHand):
 		return PAPER
-	case "🤟":
+	case re[HLOVE].MatchString(playerHand):
 		return HLOVE
-	case "🤝":
+	case re[HHANDSHAKE].MatchString(playerHand):
 		return HHANDSHAKE
-	case "👌", "🤌", "🤏", "🤘", "🤙", "👈", "👉", "👆", "👇", "☝", "👍", "👏", "🙏":
+	case re[OTHER].MatchString(playerHand):
 		return OTHER
 	default:
 		log.Fatalf("Invalid hand")
