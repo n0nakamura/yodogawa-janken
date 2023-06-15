@@ -184,7 +184,7 @@ func main() {
 	pevc := make(chan *nostr.Event)
 	go func() {
 		for {
-			if err != postReply(sk, pub, pevc) {
+			if err := postReply(sk, pub, pevc); err != nil {
 				continue
 			}
 		}
