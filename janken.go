@@ -16,6 +16,7 @@ const (
 	DRAW
 	LOVE
 	HANDSHAKE
+	INFO
 )
 
 var outcomeNameMap = map[Outcome]string{
@@ -24,6 +25,7 @@ var outcomeNameMap = map[Outcome]string{
 	DRAW:      "DRAW",
 	LOVE:      "BIG LOVE...🤟",
 	HANDSHAKE: "SHAKING... 🤝",
+	INFO:      name + "\nversion " + version,
 }
 
 func (o Outcome) String() string {
@@ -43,6 +45,7 @@ const (
 	HLOVE
 	HHANDSHAKE
 	OTHER
+	HINFO
 )
 
 var handNames = map[Hand]string{
@@ -53,6 +56,7 @@ var handNames = map[Hand]string{
 	HLOVE:      "🤟",
 	HHANDSHAKE: "🤝",
 	OTHER:      "🤔",
+	HINFO:      "ℹ️ Info",
 }
 
 var handPatterns = map[Hand]string{
@@ -62,6 +66,7 @@ var handPatterns = map[Hand]string{
 	HLOVE:      `🤟`,
 	HHANDSHAKE: `🤝`,
 	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`,
+	HINFO:      `Iℹ️`,
 }
 
 func (h Hand) String() string {
@@ -113,17 +118,20 @@ func biasJanken() Hand {
 }
 
 func doJanken(playerHand Hand, yodogawaHand Hand) Outcome {
-	if playerHand == yodogawaHand {
+	switch {
+	case playerHand == yodogawaHand:
 		return DRAW
-	} else if (playerHand == ROCK && yodogawaHand == SCISSORS) ||
+	case (playerHand == ROCK && yodogawaHand == SCISSORS) ||
 		(playerHand == SCISSORS && yodogawaHand == PAPER) ||
-		(playerHand == PAPER && yodogawaHand == ROCK) {
+		(playerHand == PAPER && yodogawaHand == ROCK):
 		return WIN
-	} else if playerHand == HLOVE {
+	case playerHand == HLOVE:
 		return LOVE
-	} else if playerHand == HHANDSHAKE {
+	case playerHand == HHANDSHAKE:
 		return HANDSHAKE
+	case playerHand == HINFO:
+		return INFO
+	default:
+		return LOSE
 	}
-
-	return LOSE
 }
