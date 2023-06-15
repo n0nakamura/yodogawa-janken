@@ -104,9 +104,15 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	pev := <-pevc
 
+	// Derivate all acceptance patterns
+	var patterns string
+	for _, pattern := range handPatterns {
+		patterns += pattern
+	}
+
 	// Extract player hand
 	var inputHand string
-	if re, err := regexp.Compile(`[RSP✊👊🤛🤜💪✌🤞🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🤟🤝👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏]`); err != nil {
+	if re, err := regexp.Compile(`[` + patterns + `]`); err != nil {
 		return err
 	} else {
 		inputHand = re.FindString(pev.Content)
