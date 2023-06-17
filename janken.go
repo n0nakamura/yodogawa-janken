@@ -59,37 +59,54 @@ var handNames = map[Hand]string{
 	OTHER:      "🤔",
 }
 
-var handPatterns = map[Hand]string{
-	ROCK:       `R✊👊🤛🤜💪🪨`,
-	SCISSORS:   `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`,
-	PAPER:      `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`,
-	HLOVE:      `🤟🫶🫂`,
-	HHANDSHAKE: `🤝`,
-	OTHER:      `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`,
+type S_Mode struct {
+	InputPatternID   map[string]uint
+	InputPattern     []string
+	InputPatternName []string
 }
 
-func (h Hand) String() string {
-	if s, ok := handNames[h]; ok {
-		return s
-	}
-	return "Unknown hand"
-}
-
-type Mode uint
+type ModeID uint
 
 const (
-	M_INFO Mode = iota
+	M_JANKEN ModeID = iota
+	M_LOVE
+	M_HANDSHAKE
+	M_OTHERHAND
+	M_INFO
 	M_BATTLE
 )
 
-var modeNames = map[Mode]string{
-	M_INFO:   "ℹ️ Info",
-	M_BATTLE: "⚔️ Battle",
-}
-
-var modePatterns = map[Mode]string{
-	M_INFO:   `Iℹ️`,
-	M_BATTLE: "B⚔️",
+var m = map[ModeID]S_Mode{
+	M_JANKEN: {
+		InputPatternID:   map[string]uint{"ROCK": 0, "SCISSORS": 1, "PAPER": 2},
+		InputPattern:     []string{`R✊👊🤛🤜💪🪨`, `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`, `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`},
+		InputPatternName: []string{"✊ Rock", "✌ Scissors", "🖐 Paper"},
+	},
+	M_LOVE: {
+		InputPatternID:   map[string]uint{"HLOVE": 0},
+		InputPattern:     []string{`🤟🫶🫂`},
+		InputPatternName: []string{"🤟 LOVE"},
+	},
+	M_HANDSHAKE: {
+		InputPatternID:   map[string]uint{"HSHAKE": 0},
+		InputPattern:     []string{`🤝`},
+		InputPatternName: []string{"🤝 HANDSHAKE"},
+	},
+	M_OTHERHAND: {
+		InputPatternID:   map[string]uint{"HOTHER": 0},
+		InputPattern:     []string{`👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`},
+		InputPatternName: []string{"🤔"},
+	},
+	M_INFO: {
+		InputPatternID:   map[string]uint{"IINFO": 0},
+		InputPattern:     []string{`Iℹ️`},
+		InputPatternName: []string{"INFO"},
+	},
+	M_BATTLE: {
+		InputPatternID:   map[string]uint{"IBATTLE": 0},
+		InputPattern:     []string{`B⚔️`},
+		InputPatternName: []string{"⚔️ BATTLE"},
+	},
 }
 
 func getPlayerHand(playerHand string) (Hand, error) {
