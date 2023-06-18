@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"math/rand"
 	"regexp"
@@ -53,14 +54,21 @@ const (
 	P_BATTLE    = `B⚔️`
 )
 
+var ErrNoValuesIncluded = errors.New("contains no matching values")
+
 func generateContent(pcontent string) (string, error) {
 	var re = make(map[ModeID]*regexp.Regexp)
 	var mode S_Mode
+	var success = 0
 	for mid, m := range modes {
 		re[mid] = regexp.MustCompile(`[` + m.InputPattern + `]`)
 		if ok := re[mid].MatchString(pcontent); ok {
 			mode = m
+			success++
 		}
+	}
+	if success == 0 {
+		return "", ErrNoValuesIncluded
 	}
 
 	return mode.DoFunc(pcontent)

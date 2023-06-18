@@ -106,6 +106,8 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	var content string
 	if c, err := generateContent(pev.Content); err == nil {
 		content = c
+	} else if err == ErrNoValuesIncluded {
+		return nil
 	} else {
 		return err
 	}
