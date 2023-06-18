@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip19"
@@ -104,42 +103,15 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	pev := <-pevc
 
-	// Derivate all acceptance patterns
-	var patterns string
-	for _, pattern := range handPatterns {
-		patterns += pattern
-	}
-
-	// Extract player hand
-	var inputHand string
-	if re, err := regexp.Compile(`[` + patterns + `]`); err != nil {
-		return err
-	} else {
-		inputHand = re.FindString(pev.Content)
-	}
-	if inputHand == "" {
-		return nil // continue的処理
-	}
-
-	// Generate a content
 	var content string
-	playerHand, err := getPlayerHand(inputHand)
-	if err != nil {
+	if c, err := generateContent(pev.Content); err == nil {
+		content = c
+	} else {
 		return err
 	}
-	yodogawaHand := biasJanken()
-	result := doJanken(playerHand, yodogawaHand)
-	switch result {
-	case WIN, LOSE, DRAW:
-		content = "Your hand: " + handNames[playerHand] + "\n" +
-			"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
-			outcomeNameMap[result]
-	case BATTLE:
-		fallthrough
-	default:
-		content = "Your hand: " + handNames[playerHand] + "\n" +
-			outcomeNameMap[result]
-	}
+
+	// content = "Your hand: " + handNames[playerHand] + "\n" +
+	// 	outcomeNameMap[result]
 
 	// Create a event
 	ev := nostr.Event{}
