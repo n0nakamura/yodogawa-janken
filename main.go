@@ -14,7 +14,7 @@ import (
 
 const (
 	name    = "yodogawa-janken"
-	version = "0.0.5"
+	version = "0.0.6"
 )
 
 type Config struct {
