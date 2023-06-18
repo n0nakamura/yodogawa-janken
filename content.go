@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 	"regexp"
@@ -14,7 +15,7 @@ var modes = map[ModeID]S_Mode{
 		DoFunc:       janken,
 	},
 	M_EMOJI: {
-		InputPattern: P_OTHERHAND,
+		InputPattern: P_EMOJI,
 		DoFunc:       emoji,
 	},
 	M_INFO: {
@@ -138,6 +139,7 @@ func janken(pcontent string) (string, error) {
 		cumulativeProb += probability
 		if randNum < cumulativeProb {
 			yodogawaHand = h
+			break
 		}
 	}
 	if allProb < cumulativeProb {
