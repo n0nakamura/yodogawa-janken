@@ -66,9 +66,17 @@ const (
 	P_LOVE      = `🤟🫶🫂`
 	P_SHAKE     = `🤝`
 	P_OTHERHAND = `👌🤌🤏🤘🤙👍`
-	P_EMOJI     = P_LOVE + P_SHAKE + P_OTHERHAND
-	P_INFO      = `Iℹ️`
-	P_BATTLE    = `B⚔️`
+	P_BAMBOO    = `🎍`
+	P_BROCCOLI  = `🥦`
+	P_COCHLEA   = `🐌`
+	P_EMOJI     = P_LOVE +
+		P_SHAKE +
+		P_OTHERHAND +
+		P_BAMBOO +
+		P_BROCCOLI +
+		P_COCHLEA
+	P_INFO   = `Iℹ️`
+	P_BATTLE = `B⚔️`
 )
 
 var ErrNoValuesIncluded = errors.New("contains no matching values")
@@ -261,7 +269,45 @@ func omikuji(pcontent string) (string, error) {
 }
 
 func emoji(pcontent string) (string, error) {
-	return "🤔", nil
+	const (
+		LOVE = iota
+		SHAKE
+		OTHERHAND
+		BAMBOO
+		BROCCOLI
+		COCHLEA
+	)
+	var pattern = []string{
+		P_LOVE,
+		P_SHAKE,
+		P_OTHERHAND,
+		P_BAMBOO,
+		P_BROCCOLI,
+		P_COCHLEA,
+	}
+
+	// Get player hand
+	var re = make(map[int]*regexp.Regexp)
+	for i, p := range pattern {
+		re[i] = regexp.MustCompile(`[` + p + `]`)
+	}
+
+	switch {
+	case re[LOVE].MatchString(pcontent):
+		return "🤟 BIG LOVE...", nil
+	case re[SHAKE].MatchString(pcontent):
+		return "🤝 SHAKING...", nil
+	case re[OTHERHAND].MatchString(pcontent):
+		return re[OTHERHAND].FindString(pcontent), nil
+	case re[BAMBOO].MatchString(pcontent):
+		return "🎍 これは竹", nil
+	case re[BROCCOLI].MatchString(pcontent):
+		return "🥦 https://cookpad.com/search/%E3%83%96%E3%83%AD%E3%83%83%E3%82%B3%E3%83%AA%E3%83%BC", nil
+	case re[COCHLEA].MatchString(pcontent):
+		return "\n₍₍🐌⁾⁾\n\n見て！カタツムリが踊っているよ\nかわいいね\n\n₍₍⁽⁽🐌₎₎⁾⁾\n\nみんながYodogawa-Jankenに反応してくれるので、カタツムリはさらに踊りだしました\nあなたのおかげです\nありがとう", nil
+	default:
+		return "🤔", nil
+	}
 }
 
 func info(pcontent string) (string, error) {
