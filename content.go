@@ -54,7 +54,7 @@ type S_Mode struct {
 const (
 	P_ROCK      = `R✊👊🤛🤜💪🪨`
 	P_SCISSORS  = `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`
-	P_PAPER     = `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`
+	P_PAPER     = `P🖐✋🤚🖖🫲🫱🫳🫴🫸🫷👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`
 	P_JANKEN    = P_ROCK + P_SCISSORS + P_PAPER
 	P_UP        = `U👆☝`
 	P_DOWN      = `D👇`
