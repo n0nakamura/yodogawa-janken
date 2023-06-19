@@ -17,6 +17,10 @@ var modes = map[ModeID]S_Mode{
 		InputPattern: P_LTW,
 		DoFunc:       ltw,
 	},
+	M_OMIKUJI: {
+		InputPattern: P_OMIKUJI,
+		DoFunc:       omikuji,
+	},
 	M_EMOJI: {
 		InputPattern: P_EMOJI,
 		DoFunc:       emoji,
@@ -36,6 +40,7 @@ type ModeID uint
 const (
 	M_JANKEN ModeID = iota
 	M_LTW
+	M_OMIKUJI
 	M_EMOJI
 	M_INFO
 	M_BATTLE
@@ -57,9 +62,10 @@ const (
 	P_LEFT      = `L👈`
 	P_FRONT     = `F🫵`
 	P_LTW       = P_UP + P_DOWN + P_RIGHT + P_LEFT + P_FRONT
+	P_OMIKUJI   = `O👏🙏`
 	P_LOVE      = `🤟🫶🫂`
 	P_SHAKE     = `🤝`
-	P_OTHERHAND = `👌🤌🤏🤘🤙👍👏🙏`
+	P_OTHERHAND = `👌🤌🤏🤘🤙👍`
 	P_EMOJI     = P_LOVE + P_SHAKE + P_OTHERHAND
 	P_INFO      = `Iℹ️`
 	P_BATTLE    = `B⚔️`
@@ -229,6 +235,29 @@ func ltw(pcontent string) (string, error) {
 	return "Your hand: " + handNames[playerHand] + "\n" +
 		"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
 		resultNameMap[result], nil
+}
+
+func omikuji(pcontent string) (string, error) {
+	f := []string{
+		"大吉",
+		"吉",
+		"中吉",
+		"小吉",
+		"半吉",
+		"末吉",
+		"末小吉",
+		"平",
+		"凶",
+		"小凶",
+		"半凶",
+		"末凶",
+		"大凶",
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	p := rand.Intn(len(f))
+
+	return "⛩️ Your fortune is " + f[p], nil
 }
 
 func emoji(pcontent string) (string, error) {
