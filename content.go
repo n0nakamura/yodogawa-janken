@@ -13,6 +13,10 @@ var modes = map[ModeID]S_Mode{
 		InputPattern: P_JANKEN,
 		DoFunc:       janken,
 	},
+	M_LTW: {
+		InputPattern: P_LTW,
+		DoFunc:       ltw,
+	},
 	M_EMOJI: {
 		InputPattern: P_EMOJI,
 		DoFunc:       emoji,
@@ -31,6 +35,7 @@ type ModeID uint
 
 const (
 	M_JANKEN ModeID = iota
+	M_LTW
 	M_EMOJI
 	M_INFO
 	M_BATTLE
@@ -46,9 +51,15 @@ const (
 	P_SCISSORS  = `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`
 	P_PAPER     = `P🖐✋🤚🖖🫲🫱🫳🫴👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`
 	P_JANKEN    = P_ROCK + P_SCISSORS + P_PAPER
+	P_UP        = `U👆☝`
+	P_DOWN      = `D👇`
+	P_RIGHT     = `R👉`
+	P_LEFT      = `L👈`
+	P_FRONT     = `F🫵`
+	P_LTW       = P_UP + P_DOWN + P_RIGHT + P_LEFT + P_FRONT
 	P_LOVE      = `🤟🫶🫂`
 	P_SHAKE     = `🤝`
-	P_OTHERHAND = `👌🤌🤏🤘🤙👈👉👆👇☝👍👏🙏🫵`
+	P_OTHERHAND = `👌🤌🤏🤘🤙👍👏🙏`
 	P_EMOJI     = P_LOVE + P_SHAKE + P_OTHERHAND
 	P_INFO      = `Iℹ️`
 	P_BATTLE    = `B⚔️`
@@ -147,6 +158,69 @@ func janken(pcontent string) (string, error) {
 	case (playerHand == ROCK && yodogawaHand == SCISSORS) ||
 		(playerHand == SCISSORS && yodogawaHand == PAPER) ||
 		(playerHand == PAPER && yodogawaHand == ROCK):
+		result = WIN
+	default:
+		result = LOSE
+	}
+
+	return "Your hand: " + handNames[playerHand] + "\n" +
+		"Yodogawa-san hand: " + handNames[yodogawaHand] + "\n" +
+		resultNameMap[result], nil
+}
+
+func ltw(pcontent string) (string, error) {
+	type Hand uint
+	const (
+		UP Hand = iota
+		DOWN
+		RIGHT
+		LEFT
+		FRONT
+		NUM // Total number
+	)
+	var handNames = map[Hand]string{
+		UP:    "👆 Up",
+		DOWN:  "👇 Down",
+		RIGHT: "👉 Right",
+		LEFT:  "👈 Left",
+		FRONT: "🫵 Front",
+	}
+	var handPatterns = map[Hand]string{
+		UP:    P_UP,
+		DOWN:  P_DOWN,
+		RIGHT: P_RIGHT,
+		LEFT:  P_LEFT,
+		FRONT: P_FRONT,
+	}
+
+	type Result uint
+	const (
+		WIN Result = iota
+		LOSE
+	)
+	var resultNameMap = map[Result]string{
+		WIN:  "YOU WIN",
+		LOSE: "YOU LOSE",
+	}
+
+	// Get player hand
+	var re = make(map[Hand]*regexp.Regexp)
+	var playerHand Hand
+	for h, pattern := range handPatterns {
+		re[h] = regexp.MustCompile(`[` + pattern + `]`)
+		if ok := re[h].MatchString(pcontent); ok {
+			playerHand = h
+		}
+	}
+	// ここで不適切なplayerHandでエラーを返す。
+
+	rand.Seed(time.Now().UnixNano())
+	yodogawaHand := Hand(rand.Intn(int(NUM)))
+
+	// Get result
+	var result Result
+	switch {
+	case playerHand == yodogawaHand:
 		result = WIN
 	default:
 		result = LOSE
