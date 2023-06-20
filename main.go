@@ -121,7 +121,7 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	ev.CreatedAt = nostr.Now()
 	ev.Kind = nostr.KindTextNote // kind1
 	ev.Tags = ev.Tags.AppendUnique(nostr.Tag{"p", pev.PubKey})
-	ev.Tags = ev.Tags.AppendUnique(nostr.Tag{"e", pev.ID, "", "reply"})
+	ev.Tags = ev.Tags.AppendUnique(nostr.Tag{"e", pev.ID, "", ""})
 	ev.Content = content
 	ev.Sign(sk)
 
