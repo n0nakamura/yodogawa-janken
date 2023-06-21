@@ -14,7 +14,7 @@ import (
 
 const (
 	name    = "yodogawa-janken"
-	version = "0.3.1"
+	version = "0.3.2"
 )
 
 type Config struct {
@@ -41,30 +41,6 @@ var defaultRelays = []string{
 
 // TODO: エラーハンドリングをきちんと書く
 // TODO: Contextを理解する
-
-// TODO: string型の戻り値が無いことを示すのに "" でよいかどうか調べる
-// TODO: そもそも関数calcHexを使う設計でよいかどうか
-func calcHex(nsec string) (string, string, error) {
-	var sk, pub string
-
-	if _, s, err := nip19.Decode(nsec); err != nil {
-		return "", "", err
-	} else {
-		sk = s.(string)
-	}
-
-	if p, err := nostr.GetPublicKey(sk); err == nil {
-		if _, err := nip19.EncodePublicKey(pub); err == nil {
-			pub = p
-		} else {
-			return "", "", err
-		}
-	} else {
-		return "", "", err
-	}
-
-	return sk, pub, nil
-}
 
 func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	ctx := context.Background()
@@ -161,8 +137,20 @@ func main() {
 		return
 	}
 
-	sk, pub, err := calcHex(cfg.Nsec)
-	if err != nil {
+	var sk string
+	if _, s, err := nip19.Decode(cfg.Nsec); err != nil {
+		log.Fatal(err)
+		return
+	} else {
+		sk = s.(string)
+	}
+	pub, err := nostr.GetPublicKey(sk)
+	if err == nil {
+		if _, err := nip19.EncodePublicKey(pub); err != nil {
+			log.Fatal(err)
+			return
+		}
+	} else {
 		log.Fatal(err)
 		return
 	}
