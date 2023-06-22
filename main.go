@@ -88,9 +88,6 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 		return err
 	}
 
-	// content = "Your hand: " + handNames[playerHand] + "\n" +
-	// 	outcomeNameMap[result]
-
 	// Create a event
 	ev := nostr.Event{}
 	ev.PubKey = pub
