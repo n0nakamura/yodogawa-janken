@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	name    = "yodogawa-janken"
-	version = "0.3.2"
+	name    = "Yodogawa-Janken"
+	version = "0.4.0"
 )
 
 type Config struct {
@@ -87,9 +87,6 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	} else {
 		return err
 	}
-
-	// content = "Your hand: " + handNames[playerHand] + "\n" +
-	// 	outcomeNameMap[result]
 
 	// Create a event
 	ev := nostr.Event{}
