@@ -69,12 +69,16 @@ const (
 	P_BAMBOO    = `🎍`
 	P_BROCCOLI  = `🥦`
 	P_COCHLEA   = `🐌`
+	P_DANCE     = `💃`
+	P_PENGUIN   = `🐧`
 	P_EMOJI     = P_LOVE +
 		P_SHAKE +
 		P_OTHERHAND +
 		P_BAMBOO +
 		P_BROCCOLI +
-		P_COCHLEA
+		P_COCHLEA +
+		P_DANCE +
+		P_PENGUIN
 	P_INFO   = `Iℹ️`
 	P_BATTLE = `B⚔️`
 )
@@ -276,6 +280,8 @@ func emoji(pcontent string) (string, error) {
 		BAMBOO
 		BROCCOLI
 		COCHLEA
+		DANCE
+		PENGUIN
 	)
 	var pattern = []string{
 		P_LOVE,
@@ -284,6 +290,8 @@ func emoji(pcontent string) (string, error) {
 		P_BAMBOO,
 		P_BROCCOLI,
 		P_COCHLEA,
+		P_DANCE,
+		P_PENGUIN,
 	}
 
 	// Get player hand
@@ -305,6 +313,10 @@ func emoji(pcontent string) (string, error) {
 		return "🥦 https://cookpad.com/search/%E3%83%96%E3%83%AD%E3%83%83%E3%82%B3%E3%83%AA%E3%83%BC", nil
 	case re[COCHLEA].MatchString(pcontent):
 		return "\n₍₍🐌⁾⁾\n\n見て！カタツムリが踊っているよ\nかわいいね\n\n₍₍⁽⁽🐌₎₎⁾⁾\n\nみんながYodogawa-Jankenに反応してくれるので、カタツムリはさらに踊りだしました\nあなたのおかげです\nありがとう", nil
+	case re[DANCE].MatchString(pcontent):
+		return "ｽﾞｲ₍₍(ง˘ω˘)ว⁾⁾ｽﾞｲ", nil
+	case re[PENGUIN].MatchString(pcontent):
+		return "ぽわ〜", nil
 	default:
 		return "🤔", nil
 	}
