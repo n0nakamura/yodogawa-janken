@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	name    = "yodogawa-janken"
+	name    = "Yodogawa-Janken"
 	version = "0.3.1"
 )
 
