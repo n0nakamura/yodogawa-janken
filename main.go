@@ -6,7 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math"
 	"os"
+	"time"
 
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip19"
@@ -42,13 +44,15 @@ var defaultRelays = []string{
 // TODO: エラーハンドリングをきちんと書く
 // TODO: Contextを理解する
 
+var ErrSubscribeEvent = errors.New("subscribeEvent error")
+
 func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	ctx := context.Background()
 
 	// TODO: 複数のリレーから取得できるようにする。
 	relay, err := nostr.RelayConnect(ctx, defaultRelays[0])
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("couldn't connect %s: %w", defaultRelays[0], err)
 	}
 
 	var filters nostr.Filters
@@ -64,16 +68,15 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	sub, err := relay.Subscribe(ctx, filters)
-	if err != nil {
-		log.Fatal(err)
+	if sub, err := relay.Subscribe(ctx, filters); err != nil {
+		return fmt.Errorf("couldn't subscribe %s: %w", defaultRelays[0], err)
+	} else {
+		for pev := range sub.Events {
+			pevc <- pev
+		}
 	}
 
-	for pev := range sub.Events {
-		pevc <- pev
-	}
-
-	return nil
+	return ErrSubscribeEvent
 }
 
 func postReply(sk string, pub string, pevc chan *nostr.Event) error {
@@ -161,9 +164,27 @@ func main() {
 		}
 	}()
 
-	err = subscribeEvent(sk, pub, pevc)
-	if err != nil {
-		log.Fatal(err)
-		return
+	// TODO: リトライ処理をきれいに書き直す。
+	for {
+		if err := subscribeEvent(sk, pub, pevc); err == ErrSubscribeEvent {
+			log.Println(err)
+			for i := 0; ; i++ {
+				// RelayConnectが成功したらループを抜ける。
+				log.Println("Retry RelayConnect")
+				ctx := context.Background()
+				if r, err := nostr.RelayConnect(ctx, defaultRelays[0]); err == nil {
+					r.Close()
+					break
+				}
+				ctx.Done()
+				log.Println("Fail. Sleep...")
+				time.Sleep(time.Duration(math.Pow(10, float64(i+1))) * time.Second)
+				if i >= 3 {
+					log.Fatal(err)
+				}
+			}
+		} else if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
