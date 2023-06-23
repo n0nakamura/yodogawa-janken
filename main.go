@@ -120,6 +120,8 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 		return errors.New("failed to publish")
 	}
 
+	log.Printf("%s: %q", pev.PubKey, content)
+
 	return nil
 }
 
