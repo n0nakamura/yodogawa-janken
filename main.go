@@ -82,6 +82,8 @@ func subscribeEvent(sk string, pub string, pevc chan *nostr.Event) error {
 func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 	pev := <-pevc
 
+	log.Printf("Receive: %q", pev.Content)
+
 	var content string
 	if c, err := generateContent(pev.Content); err == nil {
 		content = c
@@ -120,7 +122,7 @@ func postReply(sk string, pub string, pevc chan *nostr.Event) error {
 		return errors.New("failed to publish")
 	}
 
-	log.Printf("%s: %q", pev.PubKey, content)
+	log.Printf("Return: %s: %q", pev.PubKey, content)
 
 	return nil
 }
