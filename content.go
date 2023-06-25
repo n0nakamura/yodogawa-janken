@@ -53,8 +53,8 @@ type S_Mode struct {
 
 const (
 	P_ROCK      = `R✊👊🤛🤜💪🪨`
-	P_SCISSORS  = `S✌🤞🦞🦀🦂✂︎✃✄💇💇‍♂️💇‍♀️`
-	P_PAPER     = `P🖐✋🤚🖖🫲🫱🫳🫴🫸🫷👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺️🧧🔖🗞️🙋🙋‍♂️🙋‍♀️`
+	P_SCISSORS  = `S✌🤞🦞🦀🦂✂✃✄💇`
+	P_PAPER     = `P🖐✋🤚🖖🫲🫱🫳🫴🫸🫷👋👐🤲🤗🪬🧻📝📄📃📜📑🧾📰🗺🧧🔖🗞🙋`
 	P_JANKEN    = P_ROCK + P_SCISSORS + P_PAPER
 	P_UP        = `K👆☝`
 	P_DOWN      = `J👇`
@@ -80,7 +80,7 @@ const (
 		P_DANCE +
 		P_PENGUIN
 	P_INFO   = `Iℹ️`
-	P_BATTLE = `B⚔️`
+	P_BATTLE = `B⚔`
 )
 
 var ErrNoValuesIncluded = errors.New("contains no matching values")
