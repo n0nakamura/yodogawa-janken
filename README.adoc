@@ -22,6 +22,21 @@ If you mention ``R`` or ``✊`` for rock, ``S`` or ``✌`` for scissors, or ``P`
 |5
 |===
 
+== TODO
+
+.Improvements
+* Normalization of emojis.
+* Connection retry handling.
+* Retrieving structured logs.
+* Improving error handling.
+* Subscription from multiple relays and deduplication of received events.
+* Proper reply handling according to NIP-10.
+
+.Features
+* Displaying records and rankings.
+* Adding asynchronous multiplayer mode.
+* Adding learning capabilities to Yodogawa-san.
+
 == Used and referenced resources
 
 The following resources were used or referenced during the creation of this program.
