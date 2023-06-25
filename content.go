@@ -79,7 +79,7 @@ const (
 		P_COCHLEA +
 		P_DANCE +
 		P_PENGUIN
-	P_INFO   = `Iℹ️`
+	P_INFO   = `Iℹ`
 	P_BATTLE = `B⚔`
 )
 
